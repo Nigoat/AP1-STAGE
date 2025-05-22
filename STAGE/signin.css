@@ -1,0 +1,22 @@
+
+.input {
+    display: flex;
+    flex-direction: column;
+} 
+
+label {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 10px 0 5px 0;
+}
+
+.input-text {
+    min-height: 35px;
+    background-color: var(--white);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 2px;
+}
+
+.input-text::selection {
+    background-color: var(--main);
+}

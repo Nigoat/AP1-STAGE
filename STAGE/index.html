@@ -1,0 +1,57 @@
+<?php
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+    $verif_password = $_POST['verif-password'];
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
+    $email = $_POST['email'];
+    $datedenaissance = $_POST['datedenaissance'];
+    $sexe = $_POST['radio-sexe'];
+    $anneeBac = $_POST['anneeBac'];
+	$types = $_POST['radio-types'];
+    include '_conf.php';
+
+    $connexion = mysqli_connect($serveur, $user, $mdp, $nomBDD);
+
+    if (!$connexion) {
+        die('Erreur. Échec de la connexion à la base de données : ' . mysqli_connect_error());
+    }
+	
+	$tel = mysqli_real_escape_string($connexion, $tel);
+    $nom = mysqli_real_escape_string($connexion, $nom);
+    $prenom = mysqli_real_escape_string($connexion, $prenom);
+    $email = mysqli_real_escape_string($connexion, $email);
+    $login = mysqli_real_escape_string($connexion, $login);
+    $password = mysqli_real_escape_string($connexion, $password);
+    $datedenaissance = mysqli_real_escape_string($connexion, $datedenaissance);
+    $sexe = mysqli_real_escape_string($connexion, $sexe);
+    $anneeBac = mysqli_real_escape_string($connexion, $anneeBac);
+	$types = mysqli_real_escape_string($connexion, $types);
+    $requete = "INSERT INTO adherent ( nom, prenom, email, login, password, dateNaissance, Sexe, Annee_Bac, tel) 
+                VALUES ('$nom', '$prenom', '$email', '$login', '$password', '$datedenaissance', '$sexe', '$anneeBac','$tel')";
+
+    $verif_User_exist = "SELECT * FROM adherent WHERE login = '$login'";
+    $result = mysqli_query($connexion, $verif_User_exist);
+
+    if(mysqli_num_rows($result) >= 1) 
+    {
+        header('Location: signup.php?error=Login déjà enregistré.');
+        exit();
+    } else {
+        if($password == $verif_password)
+        {
+            if (mysqli_query($connexion, $requete)) {
+                header('Location: index.html');
+                exit();
+            } else {
+                echo "<br>Erreur : " . mysqli_error($connexion) . "<br>";
+                header('Location: signup.php?error=' . urlencode(mysqli_error($connexion)));
+                exit();
+            }
+        } else {
+            header('Location: signup.php?error=Les mots de passe ne sont pas identiques.');
+            exit();
+        }
+    }
+    mysqli_close($connexion);
+?>

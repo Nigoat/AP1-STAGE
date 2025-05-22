@@ -1,0 +1,53 @@
+
+
+.input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    min-width: 50px;
+    height: 30px;
+}
+
+
+.input label {
+    font-size: 12px;
+}
+
+.verif-password label {
+    max-width: 100px;
+}
+
+.datedenaissance input {
+    width: 52.3%;
+}
+
+.sexe {
+    display: block;
+}
+
+.all-radios {
+    display: flex;
+    gap: 10px;
+}
+
+.radio {
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.select label {
+    font-size: 12px;
+}
+
+.select select {
+    width: 52.3%;
+}
