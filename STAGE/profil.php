@@ -2,7 +2,7 @@
 session_start();
 include '_conf.php';
 
-// Connexion à la base de donnée
+// Connexion à la base de données
 $connexion = mysqli_connect($serveur, $user, $mdp, $nomBDD);
 if (!$connexion) {
     die('Erreur de connexion : ' . mysqli_connect_error());
@@ -16,23 +16,25 @@ $user = mysqli_fetch_assoc($resultat);
 
 $success = false;
 if (isset($_POST['update'])) {
-    $newLogin = mysqli_real_escape_string($connexion, $_POST['login']);
+    // On ne modifie plus le login, il reste inchangé
     $newNom = mysqli_real_escape_string($connexion, $_POST['nom']);
     $newPrenom = mysqli_real_escape_string($connexion, $_POST['prenom']);
     $newEmail = mysqli_real_escape_string($connexion, $_POST['email']);
+    $newSexe = mysqli_real_escape_string($connexion, $_POST['sexe']);
+    $newTelephone = mysqli_real_escape_string($connexion, $_POST['telephone']);
 
     $updateSQL = "UPDATE adherent SET 
-                    login = '$newLogin',
                     nom = '$newNom',
                     prenom = '$newPrenom',
-                    email = '$newEmail'
+                    email = '$newEmail',
+                    Sexe = '$newSexe',
+                    telephone = '$newTelephone'
                   WHERE login = '$login'";
 
     if (mysqli_query($connexion, $updateSQL)) {
-        $_SESSION['login'] = $newLogin; // Si login change
         $success = true;
         // Rafraîchir les données utilisateur
-        $sql = "SELECT * FROM adherent WHERE login = '$newLogin'";
+        $sql = "SELECT * FROM adherent WHERE login = '$login'";
         $resultat = mysqli_query($connexion, $sql);
         $user = mysqli_fetch_assoc($resultat);
     } else {
@@ -56,7 +58,7 @@ if (isset($_POST['update'])) {
             <form method="POST" action="">
                 <div class="mb-3">
                     <label for="login" class="form-label">Login :</label>
-                    <input type="text" class="form-control" id="login" name="login" value="<?= htmlspecialchars($user['login']) ?>" required>
+                    <input type="text" class="form-control" id="login" name="login" value="<?= htmlspecialchars($user['login']) ?>" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom :</label>
@@ -69,6 +71,17 @@ if (isset($_POST['update'])) {
                 <div class="mb-3">
                     <label for="email" class="form-label">Email :</label>
                     <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="sexe" class="form-label">Sexe :</label>
+                    <select class="form-control" id="sexe" name="sexe" required>
+                        <option value="H" <?= ($user['Sexe'] == 'H') ? 'selected' : '' ?>>Homme</option>
+                        <option value="F" <?= ($user['Sexe'] == 'F') ? 'selected' : '' ?>>Femme</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="telephone" class="form-label">Téléphone :</label>
+                    <input type="text" class="form-control" id="telephone" name="telephone" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Catégorie :</label>
